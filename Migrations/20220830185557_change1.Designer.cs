@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecipeStore.Data;
 
@@ -10,9 +11,10 @@ using RecipeStore.Data;
 namespace RecipeStore.Migrations
 {
     [DbContext(typeof(RecipeDbContext))]
-    partial class RecipeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220830185557_change1")]
+    partial class change1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,25 +46,6 @@ namespace RecipeStore.Migrations
                     b.HasKey("CustomerCode");
 
                     b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("RecipeStore.Data.ImageLinks", b =>
-                {
-                    b.Property<int>("RecipeCode")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("varchar(max)");
-
-                    b.HasKey("RecipeCode", "CustomerCode");
-
-                    b.HasIndex("CustomerCode");
-
-                    b.ToTable("ImageLinks");
                 });
 
             modelBuilder.Entity("RecipeStore.Data.Ingredients", b =>
@@ -131,25 +114,6 @@ namespace RecipeStore.Migrations
                     b.ToTable("Recipes");
                 });
 
-            modelBuilder.Entity("RecipeStore.Data.ImageLinks", b =>
-                {
-                    b.HasOne("RecipeStore.Data.Customers", "Customers")
-                        .WithMany("ImageLinks")
-                        .HasForeignKey("CustomerCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RecipeStore.Data.RecipeItem", "RecipeItem")
-                        .WithMany("ImageLinks")
-                        .HasForeignKey("RecipeCode")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customers");
-
-                    b.Navigation("RecipeItem");
-                });
-
             modelBuilder.Entity("RecipeStore.Data.RecipeIngredient", b =>
                 {
                     b.HasOne("RecipeStore.Data.Customers", "Customers")
@@ -179,8 +143,6 @@ namespace RecipeStore.Migrations
 
             modelBuilder.Entity("RecipeStore.Data.Customers", b =>
                 {
-                    b.Navigation("ImageLinks");
-
                     b.Navigation("RecipeIngredients");
                 });
 
@@ -191,8 +153,6 @@ namespace RecipeStore.Migrations
 
             modelBuilder.Entity("RecipeStore.Data.RecipeItem", b =>
                 {
-                    b.Navigation("ImageLinks");
-
                     b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618

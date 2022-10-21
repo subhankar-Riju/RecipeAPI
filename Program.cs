@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RecipeStore.Data;
+using RecipeStore.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddTransient<IRecipeQuery, RecipeQuery>();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(b =>
+    {
+        b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
 
 builder.Services.AddDbContext<RecipeDbContext>(options =>
 {
@@ -25,6 +35,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 
